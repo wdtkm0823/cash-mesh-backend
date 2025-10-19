@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
-from .routers import users, categories
+from .routers import users, categories, transactions
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -22,6 +22,7 @@ app.add_middleware(
 # ルーター登録
 app.include_router(users.router, prefix="/api/v1/users", tags=["users"])
 app.include_router(categories.router, prefix="/api/v1/categories", tags=["categories"])
+app.include_router(transactions.router, prefix="/api/v1/transactions", tags=["transactions"])
 
 
 @app.get("/")
