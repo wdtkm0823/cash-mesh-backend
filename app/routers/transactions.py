@@ -12,8 +12,8 @@ from app.schemas.transaction import TransactionCreate, TransactionResponse
 router = APIRouter()
 
 # TODO: 認証実装後、user_idは認証トークンから取得する
-# 現在は仮でuser_id=1を使用
-TEMP_USER_ID = 1
+# 現在は仮でuser_id=2を使用
+TEMP_USER_ID = 2
 
 
 @router.post("/", response_model=TransactionResponse, status_code=status.HTTP_201_CREATED)

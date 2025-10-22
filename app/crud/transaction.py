@@ -1,7 +1,7 @@
 from datetime import date
 from sqlalchemy.orm import Session
 
-from app.models.transaction import Transaction
+from app.models.transaction import Transaction, TransactionType
 from app.schemas.transaction import TransactionCreate
 
 
@@ -24,7 +24,7 @@ def get_transactions(
     query = db.query(Transaction).filter(Transaction.user_id == user_id)
 
     if transaction_type:
-        query = query.filter(Transaction.transaction_type == transaction_type)
+        query = query.filter(Transaction.transaction_type == transaction_type) # type: ignore
 
     if category_id is not None:
         query = query.filter(Transaction.category_id == category_id)
@@ -40,7 +40,14 @@ def get_transactions(
 
 def create_transaction(db: Session, transaction: TransactionCreate, user_id: int):
     """トランザクションを作成"""
-    db_transaction = Transaction(**transaction.model_dump(), user_id=user_id)
+    db_transaction = Transaction(
+        category_id=transaction.category_id,
+        amount=transaction.amount,
+        transaction_type=transaction.transaction_type,
+        description=transaction.description,
+        transaction_date=transaction.transaction_date,
+        user_id=user_id
+    )
     db.add(db_transaction)
     db.commit()
     db.refresh(db_transaction)
@@ -49,8 +56,8 @@ def create_transaction(db: Session, transaction: TransactionCreate, user_id: int
 
 def update_transaction(db: Session, db_transaction: Transaction, transaction: TransactionCreate):
     """トランザクションを更新"""
-    for key, value in transaction.model_dump().items():
-        setattr(db_transaction, key, value)
+    for field_name, field_value in transaction.model_dump().items():
+        setattr(db_transaction, field_name, field_value)
     db.commit()
     db.refresh(db_transaction)
     return db_transaction

@@ -10,7 +10,6 @@ from app.schemas.category import CategoryCreate, CategoryResponse
 router = APIRouter()
 
 # TODO: 認証実装後、user_idは認証トークンから取得する
-# 現在は仮でuser_id=1を使用
 TEMP_USER_ID = 1
 
 

@@ -16,7 +16,10 @@ def get_categories(db: Session, user_id: int, skip: int = 0, limit: int = 100):
 
 def create_category(db: Session, category: CategoryCreate, user_id: int):
     """カテゴリーを作成"""
-    db_category = Category(**category.model_dump(), user_id=user_id)
+    db_category = Category(
+        name=category.name,
+        user_id=user_id
+    )
     db.add(db_category)
     db.commit()
     db.refresh(db_category)
@@ -25,8 +28,8 @@ def create_category(db: Session, category: CategoryCreate, user_id: int):
 
 def update_category(db: Session, db_category: Category, category: CategoryCreate):
     """カテゴリーを更新"""
-    for key, value in category.model_dump().items():
-        setattr(db_category, key, value)
+    for field_name, field_value in category.model_dump().items():
+        setattr(db_category, field_name, field_value)
     db.commit()
     db.refresh(db_category)
     return db_category
